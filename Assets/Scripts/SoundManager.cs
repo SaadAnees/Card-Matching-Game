@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
-        musicSource.PlayOneShot(music1);
+        //musicSource.PlayOneShot(music1);
        
     }
 

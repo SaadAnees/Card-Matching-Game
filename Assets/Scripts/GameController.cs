@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -20,14 +21,19 @@ public class GameController : MonoBehaviour
     private SoundManager soundManager;
     private bool canFlip = false;
     private int turnsCount, matchCount;
+    private int highScore = 0;
     private int matchedCards = 0;
     private int totalCards = 0;
 
     [SerializeField] TextMeshProUGUI turnsText;
     [SerializeField] TextMeshProUGUI matchText;
+    [SerializeField] TextMeshProUGUI highScoreText;
+    [SerializeField] TextMeshProUGUI yourScoreText;
+    [SerializeField] GameObject GameOverPanel;
 
     private void Start()
     {
+        HideGameOver();
         SetupGrid();
         soundManager = GetComponent<SoundManager>();
         //allCards = FindObjectsOfType<Card>();
@@ -107,11 +113,6 @@ public class GameController : MonoBehaviour
             StartCoroutine(CheckCards());
         }
 
-        if (matchedCards >= totalCards)
-        {
-            soundManager.PlayGameOverSound();
-            Debug.Log("Game Over! All cards matched.");
-        }
     }
 
     private IEnumerator CheckCards()
@@ -126,6 +127,7 @@ public class GameController : MonoBehaviour
             firstCard.HideCard();
             secondCard.HideCard();
             matchCount += 1;
+            turnsCount += 1;
             matchText.text = "Matches: " + matchCount.ToString();
         }
         else
@@ -144,9 +146,49 @@ public class GameController : MonoBehaviour
         if (matchedCards >= totalCards)
         {
             soundManager.PlayGameOverSound();
+            LoadHighScore();
+            ShowGameOver();
             Debug.Log("Game Over! All cards matched.");
         }
 
         Debug.Log(matchedCards + " " + totalCards);
+    }
+
+    void ShowGameOver()
+    {
+        GameOverPanel.SetActive(true);
+        CheckHighScore();
+    }
+
+    void HideGameOver()
+    {
+        GameOverPanel.SetActive(false);
+    }
+
+    void UpdateScoreUI()
+    {
+        yourScoreText.text = $"Score: {matchedCards}";
+        highScoreText.text = $"High Score: {highScore}";
+    }
+
+    void CheckHighScore()
+    {
+        if (matchedCards > highScore)
+        {
+            highScore = matchedCards;
+            PlayerPrefs.SetInt("HighScore", highScore);
+            PlayerPrefs.Save();
+            Debug.Log("New High Score!");
+        }
+    }
+    void LoadHighScore()
+    {
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        UpdateScoreUI();
+    }
+
+    public void Home()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
