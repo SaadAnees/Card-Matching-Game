@@ -3,13 +3,11 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    private Card firstCard;
-    private Card secondCard;
+    private Card firstCard, secondCard;
     private bool canFlip = true;
 
     public void CheckMatch(Card card)
     {
-        Debug.Log(card);
         if (!canFlip) return;
 
         if (firstCard == null)
@@ -19,13 +17,27 @@ public class GameController : MonoBehaviour
         else
         {
             secondCard = card;
-        }
-
-        if (firstCard.cardFront.name == secondCard.cardFront.name)
-        {
-            Debug.Log("Its a match!");
+            StartCoroutine(CheckCards());
         }
     }
 
-  
+    private IEnumerator CheckCards()
+    {
+        canFlip = false;
+        yield return new WaitForSeconds(1);
+
+        if (firstCard.cardFront.name == secondCard.cardFront.name)
+        {
+            Destroy(firstCard.gameObject);
+            Destroy(secondCard.gameObject);
+        }
+        else
+        {
+            firstCard.FlipCard();
+            secondCard.FlipCard();
+        }
+
+        firstCard = secondCard = null;
+        canFlip = true;
+    }
 }
