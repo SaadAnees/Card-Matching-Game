@@ -3,8 +3,23 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    private Card[] allCards;
     private Card firstCard, secondCard;
-    private bool canFlip = true;
+    private bool canFlip = false;
+
+    private void Start()
+    {
+        allCards = FindObjectsOfType<Card>();
+        StartCoroutine(RevealAllCards());
+    }
+
+    private IEnumerator RevealAllCards()
+    {
+        foreach (var card in allCards) card.FlipCard();
+        yield return new WaitForSeconds(2);
+        foreach (var card in allCards) card.FlipCard();
+        canFlip = true;
+    }
 
     public void CheckMatch(Card card)
     {
