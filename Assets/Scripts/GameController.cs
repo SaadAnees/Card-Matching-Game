@@ -1,22 +1,56 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-    private Card[] allCards;
+    public GameObject cardPrefab;
+    public GridLayoutGroup gridLayout;
+    public Sprite[] cardFrontSprites;
+    public Sprite cardBackSprite;
+
+    public int rows = 2;
+    public int columns = 3;
+
+
+    public Card[] allCards;
     private Card firstCard, secondCard;
     private bool canFlip = false;
 
     private void Start()
     {
+        SetupGrid();
+        //allCards = FindObjectsOfType<Card>();
+       
+    }
+
+    void SetupGrid()
+    {
+        RectTransform rt = gridLayout.GetComponent<RectTransform>();
+        float width = rt.rect.width / columns;
+        float height = rt.rect.height / rows;
+        gridLayout.cellSize = new Vector2(Mathf.Min(width, height), Mathf.Min(width, height));
+
+        for (int i = 0; i < rows * columns; i++)
+        {
+            GameObject newCard = Instantiate(cardPrefab, gridLayout.transform);
+            Card card = newCard.GetComponent<Card>();
+
+            card.cardFront = cardFrontSprites[i / 2]; 
+            card.cardBack = cardBackSprite;
+
+        }
+
         allCards = FindObjectsOfType<Card>();
+
         StartCoroutine(RevealAllCards());
     }
 
     private IEnumerator RevealAllCards()
     {
+        yield return new WaitForSeconds(0.9f);
         foreach (var card in allCards) card.FlipCard();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1f);
         foreach (var card in allCards) card.FlipCard();
         canFlip = true;
     }

@@ -29,6 +29,7 @@ public class Card : MonoBehaviour
             cardImage.sprite = cardFront;
         else
             cardImage.sprite = cardBack;
+
         gameController.CheckMatch(this);
     }
 }
