@@ -32,4 +32,10 @@ public class Card : MonoBehaviour
 
         gameController.CheckMatch(this);
     }
+
+    public void HideCard()
+    {
+        gameObject.GetComponent<Button>().interactable = false; 
+        GetComponent<Image>().color = new Color(1, 1, 1, 0); 
+    }
 }

@@ -18,7 +18,7 @@ public class LayoutController : MonoBehaviour
         float width = rt.rect.width / columns;
         float height = rt.rect.height / rows;
 
-        float size = Mathf.Min(width, height); // Use the smaller size for uniform scaling
+        float size = Mathf.Min(width, height);
         gridLayout.cellSize = new Vector2(size, size);
     }
 }
