@@ -128,6 +128,7 @@ public class GameController : MonoBehaviour
             secondCard.HideCard();
             matchCount += 1;
             turnsCount += 1;
+            turnsText.text = "Turns: " + turnsCount.ToString();
             matchText.text = "Matches: " + matchCount.ToString();
         }
         else
@@ -143,13 +144,14 @@ public class GameController : MonoBehaviour
         canFlip = true;
 
         yield return new WaitForSeconds(0.25f);
-        if (matchedCards >= totalCards)
+        if (matchedCards >= totalCards || turnsCount >= totalCards)
         {
             soundManager.PlayGameOverSound();
             LoadHighScore();
             ShowGameOver();
-            Debug.Log("Game Over! All cards matched.");
+            Debug.Log("Game Over!");
         }
+        
 
         Debug.Log(matchedCards + " " + totalCards);
     }
@@ -167,19 +169,20 @@ public class GameController : MonoBehaviour
 
     void UpdateScoreUI()
     {
-        yourScoreText.text = $"Score: {matchedCards}";
+        yourScoreText.text = $"Score: {matchCount}";
         highScoreText.text = $"High Score: {highScore}";
     }
 
     void CheckHighScore()
     {
-        if (matchedCards > highScore)
+        if (matchCount > highScore)
         {
-            highScore = matchedCards;
+            highScore = matchCount;
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save();
             Debug.Log("New High Score!");
         }
+        LoadHighScore();
     }
     void LoadHighScore()
     {
