@@ -169,7 +169,7 @@ public class GameController : MonoBehaviour
 
     void UpdateScoreUI()
     {
-        yourScoreText.text = $"Score: {matchCount}";
+        yourScoreText.text = $"Score: {matchCount + matchedCards}";
         highScoreText.text = $"High Score: {highScore}";
     }
 
